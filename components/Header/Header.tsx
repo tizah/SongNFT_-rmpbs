@@ -15,12 +15,13 @@ import {initialState, reducer} from '../reducer'
 import {providerOptions, web3Modal} from '../utils'
 
 import { ellipseAddress, getChainData } from '../../libs/utilities'
-
+import {  getContract } from '../../contracts/contract'
 
 const Header = () => {
 
     // const [state, dispatch] = useReducer(reducer, initialState)
     const {globalState, connectWallet, disconnetWallet} = useContext(NftContext)
+    const [balance, setBalance] = useState('')
 
     console.log({ globalState: globalState, connectWallet: connectWallet})
     const { provider, web3Provider, address, chainId } = globalState
@@ -76,8 +77,21 @@ const Header = () => {
     useEffect(() => {
       if (web3Modal.cachedProvider) {
         connect()
+        if (window.ethereum && window.ethereum.selectedAddress) {
+          getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance) => {
+            setBalance(balance.toString())
+          })
+        }
       }
     }, [connect])
+
+    useEffect(() => {
+      if (window.ethereum && window.ethereum.selectedAddress) {
+        getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance) => {
+          setBalance(balance.toString())
+        })
+      }
+    }, [])
   
     // A `provider` should come with EIP-1193 events. We'll listen for those events
     // here so that when a user switches accounts or networks, we can update the
@@ -126,6 +140,8 @@ const Header = () => {
   
     const chainData = getChainData(chainId)
 
+    
+    
     return (
         <div className="header">
             <div className='header_left'>
@@ -150,6 +166,7 @@ const Header = () => {
             </div>
 
             <div className="header_right">
+              <div>your balance : {balance} drop</div>
                 {/* <div className="header_input">
                     <SearchOutlinedIcon />
                     <input type="text" placeholder="Search Playlist" />

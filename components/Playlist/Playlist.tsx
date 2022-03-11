@@ -18,38 +18,50 @@ import {  getContract } from '../../contracts/contract'
 const Playlist = () => {
     const [songs, setSongs] = useState<Array<any>>([])
     const [name, setName] = useState<string>('')
+    const [balance, setBalance] = useState('')
     const playlistId = 0
+    const loadContent = async () => {
+        if (!window.ethereum) return
+        await window.ethereum.enable()
+        window.ethereum.on('accountsChanged', function (accounts) {
+            // Time to reload your interface with accounts[0]!
+        });
+        // console.log(window.ethereum.selectedAddress)
+        // const balance = await getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress)
+        const playlistTokenContract = getContract(window.ethereum).playlistTokenContract
+        const songTokenContract = getContract(window.ethereum).songTokenContract
+        const playlist = await playlistTokenContract.playlists(playlistId)  
+        const songs = await playlistTokenContract.getPlaylistSongs(playlistId)
+        const songsInfo = []
+        for (const song of songs) {
+            songsInfo.push({
+                uri: await songTokenContract.tokenURI(song.tokenId),
+                author: await songTokenContract.ownerOf(song.tokenId),
+                songInfo: {
+                    score: song.score.toString(),
+                    tokenId: song.tokenId.toString(),
+                    tokenAddress: song.tokenAddress.toString(),
+                }
+            })
+        }
+        songsInfo.sort((a, b) => {
+            if (a.songInfo.score > b.songInfo.score) {
+                return -1;
+            }
+            if (a.songInfo.score < b.songInfo.score) {
+                return 1;
+            }
+            return 0;
+            })
+        console.log(songsInfo)
+        setSongs(songsInfo)
+        setName(playlist.name)
+        console.log(balance)
+        setBalance(balance.toString())
+    }
     useEffect(() => {
         (async () => {
-            await window.ethereum.enable()
-            const playlistTokenContract = getContract(window.ethereum).playlistTokenContract
-            const songTokenContract = getContract(window.ethereum).songTokenContract
-            const playlist = await playlistTokenContract.playlists(playlistId)  
-            const songs = await playlistTokenContract.getPlaylistSongs(playlistId)
-            const songsInfo = []
-            for (const song of songs) {
-                songsInfo.push({
-                    uri: await songTokenContract.tokenURI(song.tokenId),
-                    author: await songTokenContract.ownerOf(song.tokenId),
-                    songInfo: {
-                        score: song.score.toString(),
-                        tokenId: song.tokenId.toString(),
-                        tokenAddress: song.tokenAddress.toString(),
-                    }
-                })
-            }
-            songsInfo.sort((a, b) => {
-                if (a.songInfo.score > b.songInfo.score) {
-                  return -1;
-                }
-                if (a.songInfo.score < b.songInfo.score) {
-                  return 1;
-                }
-                return 0;
-              })
-            console.log(songsInfo)
-            setSongs(songsInfo)
-            setName(playlist.name)
+            loadContent()
         })()
     }, [])
 
@@ -61,16 +73,17 @@ const Playlist = () => {
                 <div className="playlist_name">{name}</div>
 
                 <div className="playlist_image"> 
-                    <img src={Playlistimage.src} alt="Playlist Image" />
+                    <img src={Playlistimage.src} style={{'width': '100%'}} alt="Playlist Image" />
                 </div>
 
                 <div> 
-                    {songs.map((song, index) => <Song key={index} song={song} playlistId={playlistId} /> )}
+                    {songs.map((song, index) => <Song key={index} updated={() => loadContent()} song={song} playlistId={playlistId} /> )}
                     <MoreHorizIcon />
                 </div>
             </div>
-
+            
             <div className="playlist_right">
+            
                 <Fab variant="extended" className="playlist_button">
                     <LibraryMusicOutlinedIcon sx={{ mr: 1 }} />
                     <Link href='/songnftlist'>

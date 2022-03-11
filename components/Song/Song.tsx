@@ -12,10 +12,11 @@ interface SongProps {
      author: string
      songInfo: SongResponse   
     }
-    playlistId: number
+    playlistId: number,
+    updated: any // function
 }
 
-const Song = ({ song, playlistId }: SongProps) => {
+const Song = ({ song, playlistId, updated }: SongProps) => {
     const [metadata, setMetadata] = useState({} as any)
     // uri: "linkipfs://QmWrvafcik6NFJzgYjwmHFot8RHdGqRh2bhyijfKdmFLSe"
     const { songInfo, uri } = song
@@ -28,7 +29,6 @@ const Song = ({ song, playlistId }: SongProps) => {
             setMetadata(data)
         })()
     }, [])
-
     
     const title = `${songInfo.tokenAddress} - ${songInfo.tokenId}`
     return (
@@ -41,7 +41,11 @@ const Song = ({ song, playlistId }: SongProps) => {
             </audio>
             </div>
             <span className="song_artist"><b>{songInfo.score}</b></span>
-            <Button type="button" onClick={() => { getContract(window.ethereum).playlistTokenContract.upvoteSong(playlistId, songInfo.tokenId) }}>upvote</Button>
+            <Button type="button" onClick={async () => { 
+                const tx = await getContract(window.ethereum).playlistTokenContract.upvoteSong(playlistId, songInfo.tokenId)
+                await tx.wait()
+                updated()
+            }}>upvote</Button>
         </div>
     )
 }

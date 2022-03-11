@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate-playlist-token-type": "abi-types-generator --provider=ethers_v5 './contracts/types/playlisttoken-abi.json' --output='./contracts/types/'",
-    "generate-song-token-type": "abi-types-generator --provider=ethers_v5 './contracts/types/songtoken-abi.json' --output='./contracts/types/'"
+    "generate-song-token-type": "abi-types-generator --provider=ethers_v5 './contracts/types/songtoken-abi.json' --output='./contracts/types/'",
+    "drop-token-type": "abi-types-generator --provider=ethers_v5 './contracts/types/droptoken-abi.json' --output='./contracts/types/'"
   },
   "dependencies": {
     "@emotion/react": "^11.8.2",
