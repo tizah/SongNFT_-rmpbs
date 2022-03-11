@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Link  from "next/link";
 import Image from 'next/image'
@@ -10,30 +10,62 @@ import Song from '../Song/Song'
 import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
+import { useEffect } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
-
+import {  getContract } from '../../contracts/contract'
+// import './Playlist.css';
 
 const Playlist = () => {
-    const getPlaylist = () => {
-        return ''
-    }
+    const [songs, setSongs] = useState<Array<any>>([])
+    const [name, setName] = useState<string>('')
+    const playlistId = 0
+    useEffect(() => {
+        (async () => {
+            await window.ethereum.enable()
+            const playlistTokenContract = getContract(window.ethereum).playlistTokenContract
+            const songTokenContract = getContract(window.ethereum).songTokenContract
+            const playlist = await playlistTokenContract.playlists(playlistId)  
+            const songs = await playlistTokenContract.getPlaylistSongs(playlistId)
+            const songsInfo = []
+            for (const song of songs) {
+                songsInfo.push({
+                    uri: await songTokenContract.tokenURI(song.tokenId),
+                    author: await songTokenContract.ownerOf(song.tokenId),
+                    songInfo: {
+                        score: song.score.toString(),
+                        tokenId: song.tokenId.toString(),
+                        tokenAddress: song.tokenAddress.toString(),
+                    }
+                })
+            }
+            songsInfo.sort((a, b) => {
+                if (a.songInfo.score > b.songInfo.score) {
+                  return -1;
+                }
+                if (a.songInfo.score < b.songInfo.score) {
+                  return 1;
+                }
+                return 0;
+              })
+            console.log(songsInfo)
+            setSongs(songsInfo)
+            setName(playlist.name)
+        })()
+    }, [])
 
     return (
         <Container maxWidth="lg">
         <div className="playlist">
 
             <div className="playlist_left">
-                <div className="playlist_name"> Playlist Name</div>
+                <div className="playlist_name">{name}</div>
 
                 <div className="playlist_image"> 
-                    <Image src={Playlistimage} alt="Playlist Image"  objectFit='contain'/>
+                    <img src={Playlistimage.src} alt="Playlist Image" />
                 </div>
 
                 <div> 
-                    <Song artist="Cloverdale Pomo" songId={1}/>
-                    <Song artist="Tohono O'odham" songId={2}/>
-                    <Song artist="Cloverdale Pomo" songId={3}/>
+                    {songs.map((song, index) => <Song key={index} song={song} playlistId={playlistId} /> )}
                     <MoreHorizIcon />
                 </div>
             </div>
