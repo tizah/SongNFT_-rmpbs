@@ -41,7 +41,7 @@ const Header = () => {
       console.log({ address })
       const network = await web3Provider.getNetwork()
 
-      console.log({ web3Provider })
+      console.log({ network })
   
     //   dispatch({
     //     type: 'SET_WEB3_PROVIDER',
@@ -78,6 +78,7 @@ const Header = () => {
     useEffect(() => {
       if (web3Modal.cachedProvider) {
         connect()
+        console.log("has connected")
         if (window.ethereum && window.ethereum.selectedAddress) {
           getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance) => {
             setBalance(balance.toString())
@@ -167,11 +168,7 @@ const Header = () => {
             </div>
 
             <div className="header_right">
-              <div>your balance : {balance} drop</div>
-                {/* <div className="header_input">
-                    <SearchOutlinedIcon />
-                    <input type="text" placeholder="Search Playlist" />
-                </div> */}
+              <div  className="header_option">your balance : {balance} drop</div>
                     <Link href='/' >
                         <div className="header_option">
                             <PlaylistPlayIcon fontSize="small" />

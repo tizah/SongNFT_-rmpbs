@@ -4,6 +4,8 @@ import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutline
 import { SongResponse } from '../../contracts/types/playlisttoken-abi'
 import {  getContract } from '../../contracts/contract'
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import Box from "@mui/material/Box";
 // import './Song.css'
 
 interface SongProps {
@@ -33,19 +35,33 @@ const Song = ({ song, playlistId, updated }: SongProps) => {
     const title = `${songInfo.tokenAddress} - ${songInfo.tokenId}`
     return (
         <div title={title} className="song">
-            <div className="song_name">{metadata.name}</div>
-            <div className="song_artist">{metadata.artist}</div>
-            <div>
-            <audio controls src={metadata.mp3_url}>
-                Your browser does not support the audio tag.
-            </audio>
+            <div className='artist_name'>
+                <div className="song_name">Song{metadata.name}</div>
+                <div className="song_artist">{metadata.artist}</div>
             </div>
-            <span className="song_artist"><b>{songInfo.score}</b></span>
-            <Button type="button" onClick={async () => { 
-                const tx = await getContract(window.ethereum).playlistTokenContract.upvoteSong(playlistId, songInfo.tokenId)
-                await tx.wait()
-                updated()
-            }}>upvote</Button>
+          
+            <div className='song_player'>
+                <audio controls src={metadata.mp3_url}>
+                    Your browser does not support the audio tag.
+                </audio>
+            </div>
+         
+            <div className='upvote'>
+            <span className="song_artist"> <b>
+            <Tooltip title="upvote count"> 
+            <Box sx={{width: 50, bgcolor: 'text.disabled', color: 'background.paper', p: 2 }}>
+            {songInfo.score}
+            
+            </Box>
+             </Tooltip>
+            </b></span> 
+                <Button type="button" variant="outlined" onClick={async () => { 
+                    const tx = await getContract(window.ethereum).playlistTokenContract.upvoteSong(playlistId, songInfo.tokenId)
+                    await tx.wait()
+                    updated()
+                }}>upvote</Button>
+            </div>
+            
         </div>
     )
 }

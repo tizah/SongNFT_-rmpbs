@@ -14,10 +14,14 @@ import { useEffect } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {  getContract } from '../../contracts/contract'
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+
 // import './Playlist.css';
 
 const Playlist = () => {
     const [songs, setSongs] = useState<Array<any>>([])
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [name, setName] = useState<string>('')
     const [balance, setBalance] = useState('')
     const playlistId = 0
@@ -27,6 +31,8 @@ const Playlist = () => {
         window.ethereum.on('accountsChanged', function (accounts) {
             // Time to reload your interface with accounts[0]!
         });
+
+        setIsLoading(true)
         // console.log(window.ethereum.selectedAddress)
         // const balance = await getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress)
         const playlistTokenContract = getContract(window.ethereum).playlistTokenContract
@@ -59,6 +65,7 @@ const Playlist = () => {
         setName(playlist.name)
         console.log(balance)
         setBalance(balance.toString())
+        setIsLoading(false)
     }
     useEffect(() => {
         (async () => {
@@ -82,7 +89,12 @@ const Playlist = () => {
                 </div>
 
                 <div> 
-                    {songs.map((song, index) => <Song key={index} updated={() => loadContent()} song={song} playlistId={playlistId} /> )}
+                    {isLoading ? 
+                    (
+                         <Box sx={{ width: '60%', paddingTop:'50px' }}>
+                         <LinearProgress />
+                       </Box>
+                    ) : (songs.map((song, index) => <Song key={index} updated={() => loadContent()} song={song} playlistId={playlistId} /> ))}
                     <MoreHorizIcon />
                     <br />
                     <Button variant="outlined" color="primary" onClick= {handleUpvoteSongsNFT}>

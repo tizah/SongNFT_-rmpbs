@@ -4,9 +4,23 @@
     padding: 10px;
     margin: 10px 0px;
     border-radius: 5px;
-    align-items: center;
+    flex-direction: column;
+    width: 50%;
 }
 
 .song_artist {
     padding-right: 20px;
+    font-size: medium;
+    font-weight: 300;
+}
+
+.song_name{
+    font-size: larger;
+    font-weight: 700;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.upvote {
+    display: flex;
+    justify-content: space-between;
 }
