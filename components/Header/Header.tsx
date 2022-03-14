@@ -30,7 +30,6 @@ const Header = () => {
     //   This is the initial `provider` that is returned when
     //   using web3Modal to connect. Can be MetaMask or WalletConnect.
         const provider1 = await web3Modal.connect()
-        console.log({provider1})
   
     //   We plug the initial `provider` into ethers.js and get back
     //   a Web3Provider. This will add on methods from ethers.js and
@@ -39,8 +38,10 @@ const Header = () => {
   
       const signer = web3Provider.getSigner()
       const address = await signer.getAddress()
-  
+      console.log({ address })
       const network = await web3Provider.getNetwork()
+
+      console.log({ web3Provider })
   
     //   dispatch({
     //     type: 'SET_WEB3_PROVIDER',

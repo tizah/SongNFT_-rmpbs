@@ -13,6 +13,7 @@ import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
 import { useEffect } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {  getContract } from '../../contracts/contract'
+import Button from '@mui/material/Button';
 // import './Playlist.css';
 
 const Playlist = () => {
@@ -65,6 +66,10 @@ const Playlist = () => {
         })()
     }, [])
 
+    const handleUpvoteSongsNFT = () => {
+        alert('songs upvoted')
+    }
+
     return (
         <Container maxWidth="lg">
         <div className="playlist">
@@ -79,6 +84,10 @@ const Playlist = () => {
                 <div> 
                     {songs.map((song, index) => <Song key={index} updated={() => loadContent()} song={song} playlistId={playlistId} /> )}
                     <MoreHorizIcon />
+                    <br />
+                    <Button variant="outlined" color="primary" onClick= {handleUpvoteSongsNFT}>
+                        Upvote Songs 
+                    </Button>
                 </div>
             </div>
             
