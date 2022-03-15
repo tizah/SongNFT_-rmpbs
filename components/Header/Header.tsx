@@ -42,14 +42,6 @@ const Header = () => {
       const network = await web3Provider.getNetwork()
 
       console.log({ network })
-  
-    //   dispatch({
-    //     type: 'SET_WEB3_PROVIDER',
-    //     provider,
-    //     web3Provider,
-    //     address,
-    //     chainId: network.chainId,
-    //   })
 
       connectWallet({
         type: 'SET_WEB3_PROVIDER',
@@ -80,7 +72,7 @@ const Header = () => {
         connect()
         console.log("has connected")
         if (window.ethereum && window.ethereum.selectedAddress) {
-          getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance) => {
+          getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance: any) => {
             setBalance(balance.toString())
           })
         }
@@ -89,7 +81,7 @@ const Header = () => {
 
     useEffect(() => {
       if (window.ethereum && window.ethereum.selectedAddress) {
-        getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance) => {
+        getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance: any) => {
           setBalance(balance.toString())
         })
       }
@@ -103,11 +95,6 @@ const Header = () => {
         const handleAccountsChanged = (accounts: string[]) => {
           // eslint-disable-next-line no-console
           console.log('accountsChanged', accounts)
-        //   dispatch({
-        //     type: 'SET_ADDRESS',
-        //     address: accounts[0],
-        //   })
-
           connectWallet({ 
             type: 'SET_ADDRESS',
             address: accounts[0],
@@ -139,11 +126,7 @@ const Header = () => {
         }
       }
     }, [provider, disconnect])
-  
-    const chainData = getChainData(chainId)
 
-    
-    
     return (
         <div className="header">
             <div className='header_left'>
@@ -151,20 +134,7 @@ const Header = () => {
             </div>
 
             <div className='header_nav_items'>
-                {/* <Link to='/' className="header_option">
-                    <PlaylistPlayIcon fontSize="small" />
-                    <div className="text_font">Playlist</div>
-                </Link>
-
-                <Link to='/' className="header_option">
-                    <AddIcon fontSize="small" />
-                    <div className="text_font">Add to Playlist</div>
-                </Link>
-
-                <div className="header_option">
-                    <AccountBalanceWalletIcon fontSize="small" />
-                    <div className="text_font">Connect Wallet</div>
-                </div> */}
+              
             </div>
 
             <div className="header_right">
@@ -195,10 +165,7 @@ const Header = () => {
                      <div className="text_font">Connect Wallet</div>
                  </div>
                 ) } 
-                {/* <div className="header_option">
-                    <AccountBalanceWalletIcon fontSize="small" />
-                    <div className="text_font">Connect Wallet</div>
-                </div> */}
+                
             </div>
         </div>
     )
