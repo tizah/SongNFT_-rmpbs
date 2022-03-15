@@ -55,3 +55,9 @@
   .playlist_button > a:active {
     color: none;
   }
+
+  .playlist_name {
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serifs;
+      padding: 20px;
+      
+  }

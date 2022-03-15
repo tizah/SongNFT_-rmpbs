@@ -30,7 +30,6 @@ const Header = () => {
     //   This is the initial `provider` that is returned when
     //   using web3Modal to connect. Can be MetaMask or WalletConnect.
         const provider1 = await web3Modal.connect()
-        console.log({provider1})
   
     //   We plug the initial `provider` into ethers.js and get back
     //   a Web3Provider. This will add on methods from ethers.js and
@@ -39,16 +38,10 @@ const Header = () => {
   
       const signer = web3Provider.getSigner()
       const address = await signer.getAddress()
-  
+      console.log({ address })
       const network = await web3Provider.getNetwork()
-  
-    //   dispatch({
-    //     type: 'SET_WEB3_PROVIDER',
-    //     provider,
-    //     web3Provider,
-    //     address,
-    //     chainId: network.chainId,
-    //   })
+
+      console.log({ network })
 
       connectWallet({
         type: 'SET_WEB3_PROVIDER',
@@ -77,8 +70,9 @@ const Header = () => {
     useEffect(() => {
       if (web3Modal.cachedProvider) {
         connect()
+        console.log("has connected")
         if (window.ethereum && window.ethereum.selectedAddress) {
-          getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance) => {
+          getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance: any) => {
             setBalance(balance.toString())
           })
         }
@@ -87,7 +81,7 @@ const Header = () => {
 
     useEffect(() => {
       if (window.ethereum && window.ethereum.selectedAddress) {
-        getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance) => {
+        getContract(window.ethereum).dropTokenContract.balanceOf(window.ethereum.selectedAddress).then((balance: any) => {
           setBalance(balance.toString())
         })
       }
@@ -101,11 +95,6 @@ const Header = () => {
         const handleAccountsChanged = (accounts: string[]) => {
           // eslint-disable-next-line no-console
           console.log('accountsChanged', accounts)
-        //   dispatch({
-        //     type: 'SET_ADDRESS',
-        //     address: accounts[0],
-        //   })
-
           connectWallet({ 
             type: 'SET_ADDRESS',
             address: accounts[0],
@@ -137,11 +126,7 @@ const Header = () => {
         }
       }
     }, [provider, disconnect])
-  
-    const chainData = getChainData(chainId)
 
-    
-    
     return (
         <div className="header">
             <div className='header_left'>
@@ -149,28 +134,11 @@ const Header = () => {
             </div>
 
             <div className='header_nav_items'>
-                {/* <Link to='/' className="header_option">
-                    <PlaylistPlayIcon fontSize="small" />
-                    <div className="text_font">Playlist</div>
-                </Link>
-
-                <Link to='/' className="header_option">
-                    <AddIcon fontSize="small" />
-                    <div className="text_font">Add to Playlist</div>
-                </Link>
-
-                <div className="header_option">
-                    <AccountBalanceWalletIcon fontSize="small" />
-                    <div className="text_font">Connect Wallet</div>
-                </div> */}
+              
             </div>
 
             <div className="header_right">
-              <div>your balance : {balance} drop</div>
-                {/* <div className="header_input">
-                    <SearchOutlinedIcon />
-                    <input type="text" placeholder="Search Playlist" />
-                </div> */}
+              <div  className="header_option">your balance : {balance} drop</div>
                     <Link href='/' >
                         <div className="header_option">
                             <PlaylistPlayIcon fontSize="small" />
@@ -197,10 +165,7 @@ const Header = () => {
                      <div className="text_font">Connect Wallet</div>
                  </div>
                 ) } 
-                {/* <div className="header_option">
-                    <AccountBalanceWalletIcon fontSize="small" />
-                    <div className="text_font">Connect Wallet</div>
-                </div> */}
+                
             </div>
         </div>
     )
