@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Link  from "next/link";
 import Image from 'next/image'
-import Playlistimage from '../../public/images/playlist.gif'
+import Playlistimage from '../../public/images/playlistNFT.jpg'
 
 
 import Song from '../Song/Song'
