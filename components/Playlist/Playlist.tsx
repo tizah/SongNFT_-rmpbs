@@ -77,6 +77,8 @@ const Playlist = () => {
         alert('songs upvoted')
     }
 
+    console.log({songs})
+
     return (
         <Container maxWidth="lg">
         <div className="playlist">

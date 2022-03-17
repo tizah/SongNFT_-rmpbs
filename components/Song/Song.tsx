@@ -20,12 +20,16 @@ interface SongProps {
 
 const Song = ({ song, playlistId, updated }: SongProps) => {
     const [metadata, setMetadata] = useState({} as any)
+
+    console.log({song: song, playlistId, updated })
     // uri: "linkipfs://QmWrvafcik6NFJzgYjwmHFot8RHdGqRh2bhyijfKdmFLSe"
     const { songInfo, uri } = song
-    let ipfs = uri.replace('linkipfs://', '')
+    // let ipfs = uri.replace('linkipfs://', '')
+    let ipfs = uri.replace('link', '')
     useEffect(() => {
         (async () => {
-            let data = await fetch('https://ipfs.io/ipfs/'+ ipfs) as any
+            // let data = await fetch('https://ipfs.io/ipfs/'+ ipfs) as any
+            let data = await fetch(ipfs) as any
             data = await data.json()
             console.log(data)
             setMetadata(data)
@@ -36,7 +40,7 @@ const Song = ({ song, playlistId, updated }: SongProps) => {
     return (
         <div title={title} className="song">
             <div className='artist_name'>
-                <div className="song_name">Song{metadata.name}</div>
+                <div className="song_name">Song {metadata.name}</div>
                 <div className="song_artist">{metadata.artist}</div>
             </div>
           
